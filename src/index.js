@@ -99,6 +99,7 @@ export default class {
         result.x = parseInt(children.position.x, 10);
         result.y = parseInt(children.position.y, 10);
         result.visible = children.visible;
+        result.name = object.name;
 
         return result;
     }

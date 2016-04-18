@@ -9,27 +9,31 @@ export default class {
     _objectIdToInstance = {};
     _classMap = {};
 
-    constructor(game, jsonName, json) {
+    constructor(game, json) {
         this._game = game;
-        this._jsonName = jsonName;
 
-        this._json = json ? json : game.cache.getJSON(jsonName);
-        this._json = JSON.parse(JSON.stringify(this._json));
+        // Load json from phaser OR simple use the given value
+        this._json = typeof json === 'string'
+            ? game.cache.getJSON(jsonName)
+            : json;
 
         // TODO: Delay the following code as long as possible
+        // Note: Create a copy and don't mutate the given json
+        this._json = JSON.parse(JSON.stringify(this._json));
         adjustChildrenOrder(this._json);
         this._pathToObjectId = createPathToObjectIdTable(this._json);
     }
 
-    preload(path) {
-        path = path || this._jsonName;
+    preload(assetPath) {
+        assetPath = assetPath
+            || this._json.devi.origin.replace(/\..+$/, '');
 
         for (const objectId of Object.keys(this._json.objects)) {
             const object = this._json.objects[objectId];
 
             const func = '__preload' + ucfirst(object.type);
             if (this[func]) {
-                this[func](path, object);
+                this[func](assetPath, object);
             }
         }
     }

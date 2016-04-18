@@ -101,6 +101,10 @@ export default class {
         result.visible = children.visible;
         result.name = object.name;
 
+        if (typeof result.create === 'function') {
+            result.create();
+        }
+
         return result;
     }
 
